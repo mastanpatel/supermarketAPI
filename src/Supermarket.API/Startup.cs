@@ -6,10 +6,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Supermarket.API.Domain.Repositories;
+using Supermarket.API.Domain.Services;
+using Supermarket.API.Persistence.Contexts;
+using Supermarket.API.Persistence.Repositories;
 
 namespace Supermarket.API
 {
@@ -26,6 +31,16 @@ namespace Supermarket.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseInMemoryDatabase("supermarket-api-in-memory");
+            });
+
+            services.AddScoped<ICategoryRespository, CategoryRepository>();
+            services.AddScoped<ICategoryService, CategoryService>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
